@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage{filecontents}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[francais]{babel}
+\usepackage{hyperref}
+
+\begin{filecontents*}{prgmcpge.dbx}
+\ProvidesFile{prgmcpge.dbx}
+\DeclareDatamodelEntrytypes{formation_disciplinaire}
+\DeclareDatamodelFields[type=field,datatype=literal]{contenu,capacite}
+\DeclareDatamodelEntryfields[formation_disciplinaire]{contenu,capacite}
+\end{filecontents*}
+
+\begin{filecontents*}{prgmcpge.bbx}
+\ProvidesFile{prgmcpge.bbx}
+\RequireBiber[2]
+\RequireBibliographyStyle{standard}
+\DeclareBibliographyDriver{formation_disciplinaire}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \newblock
+  \printfield{contenu}%
+  \newunit
+  \printfield{capacite}%
+  \usebibmacro{finentry}%
+  }
+\end{filecontents*}
+
+\usepackage[datamodel=prgmcpge,bibstyle=prgmcpge]{biblatex}
+
+\NewBibliographyString{contenu}
+\DefineBibliographyStrings{french}{contenu = {Notions et contenus}}
+\NewBibliographyString{capacite}
+\DefineBibliographyStrings{french}{capacite = {Capacité exigible}}
+
+\DeclareFieldFormat{contenu}{%
+  \bibstring{contenu}\addcolon\addthinspace#1\adddot}
+\DeclareFieldFormat{capacite}{%
+  \bibstring{capacite}\addcolon\addthinspace\textit{#1}\adddot}
+
+
+\begin{filecontents*}{mybib.bib}
+@article{art1,
+  title = {Mon titre},
+  author = {Test}
+}
+@formation_disciplinaire{capa1,
+  contenu = {Champ tournant},
+  capacite = {Montrer que $\vec{B}$ est sinusoïdal}
+}
+\end{filecontents*}
+
+\addbibresource{mybib.bib}
+
+\begin{document}
+
+Test : \cite{capa1} et \cite{art1}.
+
+\printbibliography
+
+\printbibliography[nottype = formation_disciplinaire]
+
+\end{document}
+
+
+% Local Variables:
+% coding: utf-8-unix
+% End:
